@@ -20,7 +20,8 @@ export default function Navbar() {
       {/* Right side: nav links */}
       <div className="flex items-center space-x-6 text-sm text-black font-medium">
         <a href="#about" className="hover:underline">About</a>
-        <Link href="/test" className="hover:underline">Friends</Link>
+        <Link href="/friendlist" className="hover:underline">Friends</Link>
+        <Link href="/leaderboard" className="hover:underline">Leaderboard</Link>
         <Link href="/signIn" className="hover:underline">Sign In</Link>
       </div>
     </nav>
