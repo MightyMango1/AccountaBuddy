@@ -3,7 +3,29 @@
 import Navbar from '../../components/Navbar'; // adjust path if needed
 import Image from 'next/image';
 
+import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import {signIn } from '../../lib/authService'
+
 export default function SignInPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErrorMsg(null)
+    try {
+      await signIn(email, password)
+      router.push('/dashboard')
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Something went wrong')
+    }
+  }
+  
+  
   return (
     <>
       <Navbar />
@@ -37,9 +59,15 @@ export default function SignInPage() {
               Sign In
             </button>
             
-            <h2> 
-              Forgot Password?
-            </h2>
+            <div className="flex justify-between text-sm">
+              <Link href="/forgot-password" legacyBehavior>
+              <a className="text-white-600 hover:underline">Forgot Password?</a>
+              </Link>
+              <Link href="/SignUp" legacyBehavior>
+              <a className="text-white-600 hover:underline">Or create an account</a>
+              </Link>
+            </div>
+
 
           </form>
         </div>
