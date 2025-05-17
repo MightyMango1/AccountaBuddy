@@ -18,11 +18,11 @@ export default function ProfilePage() {
       try {
         setLoading(true)
         
-        // 1. Get current user
+        // Get current user
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) throw new Error('Not authenticated')
 
-        // 2. Ensure user exists in your users table
+        // Ensure user exists in the users table
         const { error: syncError } = await supabase
           .from('users')
           .upsert({

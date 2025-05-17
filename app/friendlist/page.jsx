@@ -1,11 +1,10 @@
+// app/checklist/page.js
 'use client';
-import Link from 'next/link';
 import Navbar from '../../components/Navbar';
-import { useFriendlistLogic } from './action';
-import AddFriendForm from '../../components/friendform';
+import { useChecklistLogic } from '../../components/checklist';
 import AuthStatus from '../../components/authtest';
 
-export default function FriendlistPage() {
+export default function ChecklistPage() {
   const {
     checklists,
     addChecklist,
@@ -13,7 +12,21 @@ export default function FriendlistPage() {
     addTask,
     toggleTask,
     removeTask,
-  } = useFriendlistLogic();
+    user
+  } = useChecklistLogic();
+
+  //check if logged in
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-orange-100 via-green-100 to-green-200">
+        <Navbar />
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold mb-4">Please sign in to access your checklists</h1>
+          <AuthStatus />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -21,12 +34,9 @@ export default function FriendlistPage() {
       <main className="min-h-screen flex flex-col items-center bg-gradient-to-b from-orange-100 via-green-100 to-green-200 text-center px-4 py-8">
         {/* Header Buttons */}
         <div className="flex gap-4 mb-8">
-          <AuthStatus/>
+          <AuthStatus />
         </div>
-        {/* Checklist Controls */}
-        <div className="flex gap-4 mb-8">
-          <AddFriendForm/>
-        </div>
+
         <div className="w-full max-w-lg">
           <button
             onClick={addChecklist}
@@ -38,7 +48,7 @@ export default function FriendlistPage() {
           {checklists.map((c) => (
             <div key={c.id} className="bg-white rounded-2xl p-6 shadow-lg mb-6 transform hover:scale-105 transition">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-black">Checklist {c.id}</h2>
+                <h2 className="text-2xl font-bold text-black">{c.title}</h2>
                 <button
                   onClick={() => removeChecklist(c.id)}
                   className="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-1 transition"

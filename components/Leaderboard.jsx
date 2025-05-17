@@ -27,10 +27,10 @@ export default function Leaderboard() {
       if (friends) {
         // Transform Supabase data to map to player structure on the leaderboard page
         const formattedPlayers = friends.map(friend => ({
-          name: friend.name  || 'Anonymous',
-          username: friend.username || 'NULL',
-          status: friend.status || 'offline',
-          avatar: friend.avatar_url || '/avatar_1.png' // default avatar
+          name: friend.real_name  || 'Anonymous',
+          username: friend.display_name || 'NULL',
+          score: friend.score || 0,
+          avatar: friend.profile_pic_src || '/avatar_1.png' // default avatar
         }));
         
         setPlayers(formattedPlayers);
@@ -39,13 +39,13 @@ export default function Leaderboard() {
       console.error('Error fetching friends:', err);
       setError(err.message);
       // Fallback to default players if API fails (??) not sure if we should keep
-      setPlayers([
-        { name: 'Charlie', score: 420, avatar: '/avatar_1.png' },
-        { name: 'Pim', score: 23, avatar: '/avatar_2.png' },
-        { name: 'Alan', score: 69, avatar: '/avatar_3.png' },
-        { name: 'Glep', score: 49382, avatar: '/avatar_4.png' },
-        { name: 'Mr. Boss', score: 1023, avatar: '/avatar_5.png' },
-      ]);
+      // setPlayers([
+      //   { name: 'Charlie', score: 420, avatar: '/avatar_1.png' },
+      //   { name: 'Pim', score: 23, avatar: '/avatar_2.png' },
+      //   { name: 'Alan', score: 69, avatar: '/avatar_3.png' },
+      //   { name: 'Glep', score: 49382, avatar: '/avatar_4.png' },
+      //   { name: 'Mr. Boss', score: 1023, avatar: '/avatar_5.png' },
+      // ]);
     } finally {
       setLoading(false);
     }
@@ -104,10 +104,10 @@ export default function Leaderboard() {
                 height={60}
                 className="rounded-full"
               />
-              <span className="text-black font-medium">{player.name}</span>
+              <span className="text-black font-medium">{player.username}</span>
             </div>
             <span className="text-xl font-bold text-gray-800">
-              {player.status}
+              {player.score}
             </span>
           </li>
         ))}
