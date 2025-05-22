@@ -45,9 +45,9 @@
 *  **Software Architecture Pattern** <br>
 ![software architecture parttern](public/software_architecture.png)
 
-*  **entity diagram**
+*  **Entity Diagram**
 ![entity diagram](public/entity_diagram.png)
   
-*  **webtsite looks**
+*  **Webtsite Looks**
 ![website looks](public/website_looks)
 
