@@ -26,26 +26,22 @@ export const useChecklist = () => {
       if (error) {
         console.error('Failed to fetch tasks:', error);
       } else {
-          const tasks = (data || []).map(t => ({
-            id: t.task_id,
-            title: t.title,
-            description: t.description,
-            due_date: t.due_date,
-            completed: !!t.completed,
-            created_at: t.created_at,
-            completed_at: t.completed_at,
-          }));
+        const tasks = (data || []).map(t => ({
+          id: t.id,
+          title: t.title,
+          completed: !!t.completed,
+        }));
         setChecklists([{ id: 1, tasks }]);
       }
     };
     fetchTasks();
   }, []);
-  const user_id = "467cb637-3fb3-4847-a213-56592df138ec";
+
   return {
     checklists,
     addChecklist: () => addChecklistToState(checklists, setChecklists),
     removeChecklist: (id) => removeChecklistFromState(checklists, setChecklists, id),
-    addTask: (cid) => addTaskToChecklist(checklists, setChecklists, cid, user_id), // Pass user_id
+    addTask: (cid) => addTaskToChecklist(checklists, setChecklists, cid),
     toggleTask: (cid, tid) => toggleTaskInChecklist(checklists, setChecklists, cid, tid),
     removeTask: async (cid, tid) => await removeTaskFromChecklist(checklists, setChecklists, cid, tid),
   };

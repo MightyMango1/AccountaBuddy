@@ -1,39 +1,29 @@
 import { v4 as uuidv4 } from 'uuid'; // If you need to generate UUIDs for user_id or similar
-import { createNewTask, deleteTask } from '../models/checklistModel';
-
-export const addTaskToChecklist = async (checklists, setChecklists, cid, user_id) => {
+import { deleteTask } from '../models/checklistModel';
+export const addTaskToChecklist = (checklists, setChecklists, cid, user_id) => {
   const title = prompt('Enter the task title:');
   if (!title) return;
 
   const description = prompt('Enter a description (optional):') || 'EMPTY';
-  const due_date = new Date().toISOString();
+  const due_date = new Date().toISOString(); // Or prompt for due date
+  const created_at = new Date().toISOString();
 
-  try {
-    // Call backend to create the task
-    const newTask = await createNewTask({
-      user_id,
-      title,
-      description,
-      due_date,
-    });
+  const newTask = {
+    id: Date.now(), // Or use a better unique id generator
+    user_id: user_id || uuidv4(),
+    title,
+    description,
+    due_date,
+    completed: false,
+    created_at,
+    completed_at: null,
+  };
 
-    // Use the returned task (with real id)
-    const updated = checklists.map((c) =>
-      c.id === cid ? { ...c, tasks: [...c.tasks, {
-        id: newTask.task_id, // Use the id from Supabase
-        title: newTask.title,
-        description: newTask.description,
-        due_date: newTask.due_date,
-        completed: newTask.completed,
-        created_at: newTask.created_at,
-        completed_at: newTask.completed_at,
-      }] } : c
-    );
+  const updated = checklists.map((c) =>
+    c.id === cid ? { ...c, tasks: [...c.tasks, newTask] } : c
+  );
 
-    setChecklists(updated);
-  } catch (error) {
-    alert('Failed to create task: ' + (error.message || JSON.stringify(error)));
-  }
+  setChecklists(updated);
 };
 
 export const toggleTaskInChecklist = (checklists, setChecklists, cid, tid) => {
