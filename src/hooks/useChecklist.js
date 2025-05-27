@@ -17,90 +17,35 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-
 export const useChecklist = () => {
   const [checklists, setChecklists] = useState([]);
-  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    // Helper to fetch tasks for a user
-    const fetchTasks = async (uid) => {
-      if (!uid) return;
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .eq('user_id', uid);
-
-      console.log('Fetched tasks:', data, error);
-
+    const fetchTasks = async () => {
+      const { data, error } = await supabase.from('tasks').select('*');
       if (error) {
         console.error('Failed to fetch tasks:', error);
       } else {
-        const tasks = (data || []).map(t => ({
-          id: t.task_id ?? t.id,
-          title: t.title,
-          description: t.description,
-          due_date: t.due_date,
-          completed: !!t.completed,
-          created_at: t.created_at,
-          completed_at: t.completed_at,
-        }));
+          const tasks = (data || []).map(t => ({
+            id: t.task_id,
+            title: t.title,
+            description: t.description,
+            due_date: t.due_date,
+            completed: !!t.completed,
+            created_at: t.created_at,
+            completed_at: t.completed_at,
+          }));
         setChecklists([{ id: 1, tasks }]);
       }
     };
-
-    // Listen for auth state changes
-    const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      const newUid = session?.user?.id;
-      setUserId(newUid);
-
-      // Debug: get user directly from supabase
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {  
-        console.log("onAuthStateChange - User ID:", user.id);
-      } else {
-        console.log("onAuthStateChange - No user from getUser()");
-      }
-
-      if (newUid) {
-        fetchTasks(newUid);
-      } else {
-        setChecklists([]);
-        console.log('No user logged in');
-      }
-    });
-
-    // Immediately check for an existing session after setting up the listener
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      const uid = session?.user?.id;
-      setUserId(uid);
-
-      // Debug: get user directly from supabase
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {  
-        console.log("getSession - User ID:", user.id);
-      } else {
-        console.log("getSession - No user from getUser()");
-      }
-
-      if (uid) {
-        fetchTasks(uid);
-      } else {
-        setChecklists([]);
-        console.log('No user logged in');
-      }
-    });
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    fetchTasks();
   }, []);
-
+  const user_id = "467cb637-3fb3-4847-a213-56592df138ec";
   return {
     checklists,
     addChecklist: () => addChecklistToState(checklists, setChecklists),
     removeChecklist: (id) => removeChecklistFromState(checklists, setChecklists, id),
-    addTask: (cid) => addTaskToChecklist(checklists, setChecklists, cid, userId), // Use dynamic userId
+    addTask: (cid) => addTaskToChecklist(checklists, setChecklists, cid, user_id), // Pass user_id
     toggleTask: (cid, tid) => toggleTaskInChecklist(checklists, setChecklists, cid, tid),
     removeTask: async (cid, tid) => await removeTaskFromChecklist(checklists, setChecklists, cid, tid),
   };
