@@ -12,7 +12,7 @@ export async function handleLogin(formData) {
   if (error) redirect('/error');
 
   revalidatePath('/', 'layout');
-  redirect('/account');
+  redirect('/');
 }
 
 export async function handleSignup(formData) {

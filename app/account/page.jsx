@@ -88,7 +88,7 @@ export default function ProfilePage() {
 
       if (error) throw error
       alert('Profile updated successfully! Welcome to Accountabuddy')
-      router.push('/friendlist')  // Redirect after updating
+      router.push('/signIn')  // Redirect after updating
       
     } catch (error) {
       alert('Error updating profile: ' + error.message)
