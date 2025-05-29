@@ -47,7 +47,7 @@ export default function Navbar() {
       {/* Right side: nav links */}
       <div className="flex items-center space-x-6 text-sm text-black font-medium">
         <a href="/about" className="hover:underline">About</a>
-        <Link href="/friendlist" className="hover:underline">Friends</Link>
+        <Link href="/dashboard" className="hover:underline">Dashboard</Link>
         <Link href="/leaderboard" className="hover:underline">Leaderboard</Link>
         <div className="flex space-x-4">
           {user ? (
